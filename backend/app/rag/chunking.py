@@ -1,14 +1,17 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from app.config import CHUNK_SIZE, CHUNK_OVERLAP
 
-def split_text(text: str, source: str) -> list[dict]:
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-    )
-    chunks = splitter.split_text(text)
 
-    return [
-        {"text": chunk, "source": source, "chunk_index": i}
-        for i, chunk in enumerate(chunks)
-    ]
+class TextChunker:
+
+    def __init__(
+        self,
+        chunk_size: int = 1000,
+        chunk_overlap: int = 200,
+    ):
+        self.splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+        )
+
+    def split(self, text: str):
+        return self.splitter.split_text(text)

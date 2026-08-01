@@ -8,6 +8,8 @@ router = APIRouter(
     tags=["Upload"],
 )
 
+document_service = DocumentService()
+
 
 @router.post("/", response_model=UploadResponse)
 async def upload_document(file: UploadFile = File(...)):
@@ -17,12 +19,6 @@ async def upload_document(file: UploadFile = File(...)):
             detail="Only PDF files are allowed.",
         )
 
-    pdf_path = await DocumentService.save_pdf(file)
+    pdf_data = await document_service.process_pdf(file)
 
-    extracted_text = DocumentService.extract_text(pdf_path)
-
-    return UploadResponse(
-        message="PDF uploaded and processed successfully.",
-        filename=pdf_path.name,
-        extracted_characters=len(extracted_text),
-    )
+    return UploadResponse(**pdf_data)
