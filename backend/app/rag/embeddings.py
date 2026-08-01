@@ -1,19 +1,10 @@
-from google import genai
-
-from app.core.config import settings
+from sentence_transformers import SentenceTransformer
 
 
-class GeminiEmbedding:
+class EmbeddingModel:
 
     def __init__(self):
-        self.client = genai.Client(
-            api_key=settings.GEMINI_API_KEY
-        )
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
     def embed(self, text: str):
-        response = self.client.models.embed_content(
-            model="text-embedding-004",
-            contents=text,
-        )
-
-        return response.embeddings[0].values
+        return self.model.encode(text).tolist()

@@ -2,12 +2,12 @@ from pathlib import Path
 import shutil
 import uuid
 
-import fitz
 from fastapi import HTTPException, UploadFile
 
 from app.rag.chunking import TextChunker
-from app.rag.embeddings import GeminiEmbedding
-from app.rag.vector_store import VectorStore
+from app.services.embedding_service import EmbeddingService
+from app.services.pdf_service import PDFService
+from app.services.vector_store_service import VectorStoreService
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -16,45 +16,31 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 class DocumentService:
 
     def __init__(self):
+        self.pdf_service = PDFService()
         self.chunker = TextChunker()
-        self.embedding_model = GeminiEmbedding()
-        self.vector_store = VectorStore()
+        self.embedding_service = EmbeddingService()
+        self.vector_store_service = VectorStoreService()
 
     async def process_pdf(self, file: UploadFile) -> dict:
-        """
-        Complete PDF processing pipeline:
-        Save → Extract → Chunk → Embed → Store
-        """
 
         unique_filename = f"{uuid.uuid4()}_{file.filename}"
+
         file_path = UPLOAD_DIR / unique_filename
 
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
         try:
-            document = fitz.open(file_path)
 
-            text = ""
-
-            for page in document:
-                text += page.get_text()
-
-            page_count = document.page_count
-
-            document.close()
-
-            text = text.strip()
+            text, page_count = self.pdf_service.extract_text(file_path)
 
             chunks = self.chunker.split(text)
 
-            embeddings = []
+            embeddings = self.embedding_service.generate_embeddings(
+                chunks
+            )
 
-            for chunk in chunks:
-                embedding = self.embedding_model.embed(chunk)
-                embeddings.append(embedding)
-
-            self.vector_store.add_chunks(
+            self.vector_store_service.store(
                 chunks=chunks,
                 embeddings=embeddings,
                 filename=unique_filename,
@@ -74,5 +60,5 @@ class DocumentService:
         except Exception as e:
             raise HTTPException(
                 status_code=500,
-                detail=f"Failed to process PDF: {str(e)}",
+                detail=str(e),
             )
