@@ -1,6 +1,8 @@
 from google import genai
+from google.genai.errors import ClientError
 
 from app.core.config import settings
+from app.prompts.system_prompt import SYSTEM_PROMPT
 
 
 class GeminiGenerator:
@@ -17,30 +19,49 @@ class GeminiGenerator:
     ):
 
         prompt = f"""
-You are LegalMind AI.
+{SYSTEM_PROMPT}
 
-Answer ONLY using the provided context.
+-------------------------
+DOCUMENT CONTEXT
+-------------------------
 
-If the answer cannot be found in the context, reply exactly:
-
-"I could not find the answer in the uploaded documents."
-
-Context:
 {context}
 
-Question:
+-------------------------
+USER QUESTION
+-------------------------
+
 {question}
 
-Answer:
+-------------------------
+ANSWER
+-------------------------
 """
 
-        print(f"Using model: {settings.MODEL_NAME}")
 
-        response = self.client.models.generate_content(
-            model=settings.MODEL_NAME,
-            contents=prompt,
-        )
+        try:
 
-        print(response)
+            response = self.client.models.generate_content(
+                model=settings.MODEL_NAME,
+                contents=prompt,
+            )
 
-        return response.text
+            return response.text
+
+        except ClientError as e:
+
+            print(f"Gemini API Error: {e}")
+
+            return (
+                "Sorry, I couldn't generate an answer because the AI service "
+                "is currently unavailable or its quota has been exceeded. "
+                "Please try again later."
+            )
+
+        except Exception as e:
+
+            print(f"Unexpected Error: {e}")
+
+            return (
+                "An unexpected error occurred while generating the answer."
+            )

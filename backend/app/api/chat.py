@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
 
+from app.schemas.chat import ChatRequest, ChatResponse
 from app.services.chat_service import ChatService
 
 router = APIRouter(
@@ -11,11 +11,10 @@ router = APIRouter(
 chat_service = ChatService()
 
 
-class ChatRequest(BaseModel):
-    question: str
-
-
-@router.post("/")
+@router.post(
+    "/",
+    response_model=ChatResponse,
+)
 async def chat(request: ChatRequest):
 
     response = chat_service.ask(request.question)
