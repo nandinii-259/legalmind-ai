@@ -1,15 +1,35 @@
 from fastapi import FastAPI
-from app.database import Base, engine
-from app.models import document
-from app.api import upload
 
-Base.metadata.create_all(bind=engine)
+from app.core.logging_config import logger
 
-app = FastAPI(title="LegalMind AI")
+app = FastAPI(
+    title="LegalMind AI",
+    description="AI-powered Legal Assistant using RAG",
+    version="1.0.0",
+)
 
-app.include_router(upload.router)
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info("LegalMind AI Backend Started Successfully")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("LegalMind AI Backend Stopped")
 
 
 @app.get("/")
-def read_root():
-    return {"message": "LegalMind AI backend is alive"}
+async def root():
+    return {
+        "message": "Welcome to LegalMind AI 🚀"
+    }
+
+
+@app.get("/health")
+async def health():
+    return {
+        "status": "healthy",
+        "service": "LegalMind AI Backend",
+        "version": "1.0.0",
+    }
