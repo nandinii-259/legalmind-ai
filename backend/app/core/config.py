@@ -24,5 +24,11 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+settings = Settings()
 
 settings = Settings()
+
+print("=" * 50)
+print("Loaded Configuration")
+print("MODEL_NAME:", settings.MODEL_NAME)
+print("=" * 50)
