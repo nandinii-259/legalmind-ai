@@ -1,5 +1,10 @@
 from fastapi import FastAPI
 
+from app.api.chat import router as chat_router
+from app.api.documents import router as documents_router
+from app.api.health import router as health_router
+from app.api.history import router as history_router
+from app.api.upload import router as upload_router
 from app.core.logging_config import logger
 
 app = FastAPI(
@@ -19,17 +24,15 @@ async def shutdown_event():
     logger.info("LegalMind AI Backend Stopped")
 
 
-@app.get("/")
+@app.get("/", tags=["Root"])
 async def root():
     return {
         "message": "Welcome to LegalMind AI 🚀"
     }
 
 
-@app.get("/health")
-async def health():
-    return {
-        "status": "healthy",
-        "service": "LegalMind AI Backend",
-        "version": "1.0.0",
-    }
+app.include_router(health_router)
+app.include_router(upload_router)
+app.include_router(chat_router)
+app.include_router(documents_router)
+app.include_router(history_router)
