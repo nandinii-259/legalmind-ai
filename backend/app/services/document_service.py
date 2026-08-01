@@ -2,7 +2,8 @@ from pathlib import Path
 import shutil
 import uuid
 
-from fastapi import UploadFile
+import fitz  # PyMuPDF
+from fastapi import HTTPException, UploadFile
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -10,9 +11,9 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 
 class DocumentService:
     @staticmethod
-    async def save_pdf(file: UploadFile) -> str:
+    async def save_pdf(file: UploadFile) -> Path:
         """
-        Save uploaded PDF and return the saved filename.
+        Save uploaded PDF and return its file path.
         """
 
         unique_filename = f"{uuid.uuid4()}_{file.filename}"
@@ -22,4 +23,28 @@ class DocumentService:
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        return unique_filename
+        return file_path
+
+    @staticmethod
+    def extract_text(pdf_path: Path) -> str:
+        """
+        Extract text from a PDF using PyMuPDF.
+        """
+
+        try:
+            document = fitz.open(pdf_path)
+
+            text = ""
+
+            for page in document:
+                text += page.get_text()
+
+            document.close()
+
+            return text.strip()
+
+        except Exception as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to extract text: {str(e)}",
+            )

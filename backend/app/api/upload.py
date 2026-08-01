@@ -17,9 +17,12 @@ async def upload_document(file: UploadFile = File(...)):
             detail="Only PDF files are allowed.",
         )
 
-    filename = await DocumentService.save_pdf(file)
+    pdf_path = await DocumentService.save_pdf(file)
+
+    extracted_text = DocumentService.extract_text(pdf_path)
 
     return UploadResponse(
-        message="PDF uploaded successfully.",
-        filename=filename,
+        message="PDF uploaded and processed successfully.",
+        filename=pdf_path.name,
+        extracted_characters=len(extracted_text),
     )
