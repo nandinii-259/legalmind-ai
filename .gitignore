@@ -1,4 +1,28 @@
-venv/
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
 .env
-*.pyc
+
+# Database
+*.db
+*.sqlite3
+
+# Vector Database
+vector_db/
+
+# Uploads
+uploads/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+logs/
+*.log
