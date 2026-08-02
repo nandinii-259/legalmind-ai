@@ -267,26 +267,6 @@ Final Answer + Sources
 
 ---
 
-# Screenshots
-
-## Home
-
-> Add screenshot here
-
-## Upload
-
-> Add screenshot here
-
-## AI Response
-
-> Add screenshot here
-
-## Chat History
-
-> Add screenshot here
-
----
-
 # Future Improvements
 
 - Authentication
