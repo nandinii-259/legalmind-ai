@@ -1,33 +1,31 @@
 # Python
+venv/
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 
-# Virtual Environment
-venv/
+# Environment
 .env
+.env.local
 
 # Database
 *.db
-*.sqlite3
 
-# Vector Database
-vector_db/
+# ChromaDB
+chroma_db/
 
-# Uploads
-uploads/
+# Logs
+*.log
+
+# Node
+frontend/node_modules/
+
+# React Build
+frontend/dist/
 
 # VS Code
 .vscode/
 
-# macOS
+# OS
 .DS_Store
-
-# Logs
-logs/
-*.log
-
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
+Thumbs.db
