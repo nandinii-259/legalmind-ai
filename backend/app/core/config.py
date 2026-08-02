@@ -26,7 +26,6 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-settings = Settings()
 
 print("=" * 50)
 print("Loaded Configuration")
