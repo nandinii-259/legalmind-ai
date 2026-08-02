@@ -1,3 +1,5 @@
+from app.database.crud import save_chat
+from app.database.database import SessionLocal
 from app.rag.generator import GeminiGenerator
 from app.rag.retriever import Retriever
 
@@ -16,7 +18,7 @@ class ChatService:
         documents = results["documents"][0]
         metadata = results["metadatas"][0]
 
-        # Build context for Gemini
+        # Build context
         context = "\n\n".join(documents)
 
         # Generate answer
@@ -25,7 +27,19 @@ class ChatService:
             context=context,
         )
 
-        # Remove duplicate document names
+        # Save chat to database
+        db = SessionLocal()
+
+        try:
+            save_chat(
+                db=db,
+                question=question,
+                answer=answer,
+            )
+        finally:
+            db.close()
+
+        # Remove duplicate sources
         seen = set()
         formatted_sources = []
 
@@ -47,5 +61,3 @@ class ChatService:
             "answer": answer,
             "sources": formatted_sources,
         }
-
-    
