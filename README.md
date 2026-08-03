@@ -2,7 +2,31 @@
 
 > AI-powered Legal Document Assistant using **Retrieval-Augmented Generation (RAG)**
 
-LegalMind AI is a full-stack AI application that allows users to upload PDF documents and ask natural language questions. The system retrieves relevant document chunks using vector search and generates context-aware answers using Google's Gemini model.
+<p align="center">
+
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Vercel-success?style=for-the-badge)](https://legalmind-ai-delta.vercel.app/)
+[![Backend](https://img.shields.io/badge/⚡%20Backend-Railway-blue?style=for-the-badge)](https://legalmind-ai-production.up.railway.app/)
+[![API Docs](https://img.shields.io/badge/📖%20Swagger-API%20Docs-green?style=for-the-badge)](https://legalmind-ai-production.up.railway.app/docs)
+
+</p>
+
+LegalMind AI is a full-stack AI-powered document assistant that enables users to upload PDF documents and ask natural language questions. The application uses **Retrieval-Augmented Generation (RAG)** with **ChromaDB**, **Sentence Transformers**, and **Google Gemini** to generate context-aware answers with source citations.
+
+---
+
+# 🌐 Live Demo
+
+### 🚀 Frontend
+
+https://legalmind-ai-delta.vercel.app/
+
+### ⚡ Backend API
+
+https://legalmind-ai-production.up.railway.app/
+
+### 📖 Swagger API Documentation
+
+https://legalmind-ai-production.up.railway.app/docs
 
 ---
 
@@ -11,20 +35,21 @@ LegalMind AI is a full-stack AI application that allows users to upload PDF docu
 - 📄 Upload PDF documents
 - 🔍 Extract and chunk document text
 - 🧠 Semantic search using Sentence Transformers
-- 🗂️ Vector database with ChromaDB
+- 🗂️ Vector database using ChromaDB
 - 🤖 AI-powered answers using Google Gemini
 - 📚 Retrieval-Augmented Generation (RAG)
 - 💬 Markdown formatted AI responses
 - 📑 Source citations for every answer
 - 🕒 Persistent chat history using SQLite
 - 🗑️ Clear chat history
+- 🌍 Live deployed application (Vercel + Railway)
 - ⚡ FastAPI backend
 - ⚛️ React frontend
 - 📖 Interactive Swagger API documentation
 
 ---
 
-## 🏗️ Architecture
+# 🏗️ Architecture
 
 ```
                 +----------------------+
@@ -78,12 +103,12 @@ Retrieve Relevant Chunks
 
 - FastAPI
 - Uvicorn
+- Python
 - Google Gemini API
 - Sentence Transformers
 - ChromaDB
 - SQLite
 - PyMuPDF
-- Python
 
 ---
 
@@ -102,7 +127,7 @@ legalmind-ai/
 │   │   ├── services/
 │   │   └── main.py
 │   │
-│   ├── chroma_db/
+│   ├── vector_db/
 │   ├── uploads/
 │   ├── requirements.txt
 │   └── .env
@@ -129,7 +154,7 @@ legalmind-ai/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/legalmind-ai.git
+git clone https://github.com/nandinii-259/legalmind-ai.git
 
 cd legalmind-ai
 ```
@@ -142,8 +167,20 @@ cd legalmind-ai
 cd backend
 
 python -m venv venv
+```
 
+Activate virtual environment
+
+### Windows
+
+```bash
 venv\Scripts\activate
+```
+
+### macOS/Linux
+
+```bash
+source venv/bin/activate
 ```
 
 Install dependencies
@@ -157,7 +194,11 @@ Create `.env`
 ```env
 GEMINI_API_KEY=YOUR_API_KEY
 
-MODEL_NAME=gemini-3.5-flash
+MODEL_NAME=gemini-2.5-flash
+
+DATABASE_URL=sqlite:///legalmind.db
+
+CHROMA_PATH=vector_db
 ```
 
 Run backend
@@ -188,11 +229,7 @@ cd frontend
 npm install
 ```
 
-Create
-
-```
-.env
-```
+Create `.env`
 
 ```env
 VITE_API_URL=http://localhost:8001
@@ -204,11 +241,23 @@ Run frontend
 npm run dev
 ```
 
-Frontend
+Frontend runs at
 
 ```
 http://localhost:5173
 ```
+
+---
+
+# 🚀 Deployment
+
+| Service | Platform |
+|----------|----------|
+| Frontend | Vercel |
+| Backend | Railway |
+| AI Model | Google Gemini |
+| Vector Database | ChromaDB |
+| Database | SQLite |
 
 ---
 
@@ -217,8 +266,8 @@ http://localhost:5173
 | Method | Endpoint | Description |
 |---------|----------|-------------|
 | POST | `/upload/` | Upload PDF |
-| POST | `/chat/` | Ask Questions |
-| GET | `/history/` | Get Chat History |
+| POST | `/chat/` | Ask AI Questions |
+| GET | `/history/` | Retrieve Chat History |
 | DELETE | `/history/` | Clear Chat History |
 
 ---
@@ -227,90 +276,86 @@ http://localhost:5173
 
 ```
 Upload PDF
-
-↓
-
+      │
+      ▼
 Extract Text
-
-↓
-
-Chunk Text
-
-↓
-
+      │
+      ▼
+Chunk Document
+      │
+      ▼
 Generate Embeddings
-
-↓
-
+      │
+      ▼
 Store in ChromaDB
-
-↓
-
+      │
+      ▼
 User asks Question
-
-↓
-
+      │
+      ▼
 Semantic Retrieval
-
-↓
-
+      │
+      ▼
 Relevant Chunks
-
-↓
-
-Gemini LLM
-
-↓
-
+      │
+      ▼
+Google Gemini
+      │
+      ▼
 Final Answer + Sources
 ```
-<<<<<<< HEAD
-=======
 
->>>>>>> afde55dcfdb2b4ad59a0a450c7a802befd5a50ba
 ---
 
-# Future Improvements
+# 🚀 Future Improvements
 
-- Authentication
+- User Authentication
 - Multi-document support
 - Streaming AI responses
 - Drag & Drop upload
-- Dark mode
-- Docker support
+- Dark Mode
+- Docker Support
 - AWS Deployment
-- Role-based access
+- Role-based Access Control
+- Conversation Memory
+- Multiple LLM Support
 
 ---
 
-# Learning Outcomes
+# 📚 Learning Outcomes
 
 This project helped in learning:
 
 - Retrieval-Augmented Generation (RAG)
 - FastAPI Development
 - React Development
-- REST APIs
-- Vector Databases
-- Embedding Models
-- Prompt Engineering
+- REST API Development
 - Google Gemini API
+- Sentence Transformers
 - ChromaDB
+- Vector Search
+- Semantic Search
+- Prompt Engineering
 - SQLite
 - Full Stack AI Development
+- Git & GitHub
+- Railway Deployment
+- Vercel Deployment
 
 ---
 
-# Author
+# 👩‍💻 Author
 
-**Nandini Agrawal**
+## Nandini Agrawal
 
-Electronics & Telecommunication Engineering
+Electronics & Telecommunication Engineering Student
 
-AI & Software Engineering Enthusiast
+AI Engineer • Full Stack Developer • Software Engineering Enthusiast
+
+If you found this project useful, consider giving it a ⭐ on GitHub!
 
 ---
 
-# License
+# 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
